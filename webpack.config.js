@@ -50,8 +50,10 @@ module.exports = {
 	},
 	output: {
 		filename: "[name].bundle.js",
-		path: path.resolve(__dirname, "dist")
+		path: path.resolve(__dirname, "dist"),
+		iife: false	// prevent top level IIFE on Webpack 5 - need this so M-Files finds the OnNewShellUI entry point
 	},
+	target: "browserslist",	// need a browerslist entry in package.json specifying "ie 8", otherwise won't work in M-Files Desktop
 	externals: {
 		MFiles: "MFiles",
 		ShellUIModule: "ShellUIModule",

@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require('webpack');
 const ReplaceBundleStringPlugin = require('replace-bundle-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 
 /**
  * See: https://stackoverflow.com/a/72219174/1288184
@@ -44,25 +45,14 @@ module.exports = {
 	output: {
 		filename: "[name].bundle.js",
 		// path: path.resolve( __dirname, "dist" )
+		iife: false,	// prevent top level IIFE on Webpack 5 - need this so M-Files finds the OnNewShellUI entry point
 	},
+	target: "browserslist",	// need a browerslist entry in package.json specifying "ie 8", otherwise won't work in M-Files Desktop
 	externals: {
 		MFiles: "MFiles",
 		ShellUIModule: "ShellUIModule",
 		MFilesDashboard: "window"
 	},
 	plugins: [
-		// es6-promise polyfill compile has Promise.prototype.catch/finally which doesn't work with Desktop
-		new ReplaceBundleStringPlugin([{
-			partten: /Promise.prototype.catch /g,
-			replacement: function () {
-				return 'Promise.prototype[\'catch\']';
-			}
-		},
-		{
-			partten: /Promise.prototype.finally /g,
-			replacement: function () {
-				return 'Promise.prototype[\'finally\']';
-			}
-		}])
 	]
 };
